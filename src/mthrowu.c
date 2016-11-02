@@ -801,6 +801,10 @@ struct attack  *mattk;
                     if (dog->hungrytime >= 10)
                         dog->hungrytime -= 10;
                 }
+            } else if (typ == AD_RUST) {
+		if (canseemon(mtmp))
+                    pline("%s spits a fierce stream of water!", Monnam(mtmp));
+                mtmp->mspec_used = 6 + rn2(18);
             } else impossible("Breath weapon %d used", typ-1);
         } else
             return 0;
@@ -987,6 +991,16 @@ struct attack *mattk;
                     mtmp->mspec_used = 10 + rn2(20);
                 if (typ == AD_SLEE && !Sleep_resistance)
                     mtmp->mspec_used += rnd(20);
+            } else if (typ == AD_RUST) {
+		if (canseemon(mtmp))
+                    pline("%s spits a stream of water!", Monnam(mtmp));
+		else
+                    You("are hit by a stream of water!");
+		if (u.umonnum == PM_IRON_GOLEM) {
+                    You("rust!");
+                    rehumanize();
+                } else
+                    erode_armor(&youmonst, ERODE_RUST);
             } else
                 impossible("Breath weapon %d used", typ - 1);
         }
